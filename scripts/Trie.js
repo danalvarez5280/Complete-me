@@ -26,7 +26,7 @@ export default class Trie {
       this.wordCount++;
       currentNode.value = data;
     }
-    console.log(currentNode.value);
+    // console.log(currentNode.value);
   }
 
   count() {
@@ -45,25 +45,47 @@ export default class Trie {
       let keys = Object.keys(currentNode.children);
 
       for (let j = 0; j < keys.length; j++) {
-        console.log('CurrentNode', currentNode, 'Keys', keys);
+        // console.log('CurrentNode', currentNode, 'Keys', keys);
         const child = currentNode.children[keys[j]];
         let newString = word + child.letter;
         if(child.isWord) {
-          suggestionArray.push(newString);
+          suggestionArray.push({name: newString,
+                                frequency: child.frequency,
+                                lastTime: child.lastSelected});
         }
         traverseTheTrie(newString, child);
       }
     }
 
     if (currentNode && currentNode.isWord) {
-      suggestionArray.push(word)
+      suggestionArray.push({name: word,
+                            frequency: currentNode.frequency,
+                            lastTime: currentNode.lastSelected})
     }
 
     if(currentNode) {
       traverseTheTrie(word, currentNode)
     }
+    // console.log(suggestionArray);
+    suggestionArray.sort((a, b) => {
+      return b.frequency - a.frequency || b.lastTime - a.lastTime;
+    })
+    let dan = suggestionArray.map((obj) => {
+      return obj.name
+    })
+    console.log(dan);
+    return dan
+  }
 
-    return suggestionArray;
+  select(word) {
+    let wordsArray = [...word];
+    let currentNode = this.root;
+
+    for (let i = 0; i < wordsArray.length; i++) {
+      currentNode = currentNode.children[wordsArray[i]]
+    }
+    currentNode.frequency++
+    currentNode.lastSelected = Date.now();
   }
 
   populate(dictionary) {
