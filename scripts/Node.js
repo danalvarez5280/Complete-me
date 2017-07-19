@@ -4,6 +4,6 @@ export default class Node {
     this.isWord = false;
     this.letter = letter;
     this.frequency = 0;
-    this.value = '';
+    this.lastSelected = 0;
   }
 }
