@@ -160,9 +160,9 @@ describe('Trie functionality', () => {
     let completeMe;
 
     beforeEach(function () {
-    this.timeout(3000)
-    completeMe = new Trie();
-    completeMe.populate(dictionary);
+      this.timeout(3000)
+      completeMe = new Trie();
+      completeMe.populate(dictionary);
 
     })
 
