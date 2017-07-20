@@ -1,8 +1,9 @@
 import { expect } from 'chai';
-import Trie from '../scripts/Trie'
-import Node from '../scripts/Node'
-const text = "/usr/share/dict/words"
-// const dictionary = fs.readFileSync(text).toString().trim().split('\n')
+import Trie from '../scripts/Trie';
+import Node from '../scripts/Node';
+const fs = require ('fs')
+const text = "/usr/share/dict/words";
+const dictionary = fs.readFileSync(text).toString().trim().split('\n');
 
 describe('Trie functionality', () => {
 
@@ -155,6 +156,21 @@ describe('Trie functionality', () => {
     })
   });
 
+  describe('dictionary populate', () => {
+    let completeMe;
+
+    beforeEach(function () {
+    this.timeout(3000)
+    completeMe = new Trie();
+    completeMe.populate(dictionary);
+
+    })
+
+    it.skip('should have lots of words after dictionary is populated', () => {
+      expect(completeMe.wordCount).to.equal(234371);
+    })
+  })
+
   describe('select', () => {
     let completeMe;
 
@@ -162,7 +178,7 @@ describe('Trie functionality', () => {
       completeMe = new Trie();
     })
 
-    it.skip('should be able to select order of words returned by suggest', () => {
+    it('should be able to select order of words returned by suggest', () => {
       completeMe.insert('app')
       completeMe.insert('apple')
       completeMe.insert('applesauce')
@@ -173,14 +189,26 @@ describe('Trie functionality', () => {
       expect(suggestions).to.deep.equal([ 'app', 'apple', 'applesauce', 'apply' ])
 
       completeMe.select('app');
+      suggestions = completeMe.suggest('app');
       expect(suggestions).to.deep.equal([ 'app', 'apple', 'applesauce', 'apply' ])
 
       completeMe.select('apply');
+      suggestions = completeMe.suggest('app');
       expect(suggestions).to.deep.equal([ 'apply', 'app', 'apple', 'applesauce' ])
 
       completeMe.select('apple');
+      suggestions = completeMe.suggest('app');
       expect(suggestions).to.deep.equal([ 'apple', 'apply', 'app', 'applesauce' ])
+
+      completeMe.select('app');
+      suggestions = completeMe.suggest('app');
+      expect(suggestions).to.deep.equal([ 'app', 'apple', 'apply', 'applesauce' ])
+
+      completeMe.select('apply');
+      completeMe.select('app');
+      completeMe.select('apple');
+      suggestions = completeMe.suggest('app');
+      expect(suggestions).to.deep.equal([ 'app', 'apple', 'apply', 'applesauce' ])
     })
   })
-
 })

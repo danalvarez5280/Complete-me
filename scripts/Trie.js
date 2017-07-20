@@ -16,7 +16,7 @@ export default class Trie {
     let currentNode = this.root;
 
     letters.forEach(letter => {
-      if(!currentNode.children[letter]) {
+      if (!currentNode.children[letter]) {
         currentNode.children[letter] = new Node(letter);
       }
       currentNode = currentNode.children[letter];
@@ -26,59 +26,52 @@ export default class Trie {
       this.wordCount++;
       currentNode.value = data;
     }
-    // console.log(currentNode.value);
   }
 
   count() {
-      return this.wordCount
+    return this.wordCount;
   }
 
   suggest(word) {
-    let wordsArray = [...word];
+    let wordsArray = [...word.toLowerCase()];
     let suggestionArray = [];
     let currentNode = this.root;
 
     for (let i = 0; i < wordsArray.length; i++) {
       currentNode = currentNode.children[wordsArray[i]]
     }
-    const traverseTheTrie = (word, currentNode) => {
+    const findThatWord = (word, currentNode) => {
       let keys = Object.keys(currentNode.children);
 
       for (let j = 0; j < keys.length; j++) {
-        // console.log('CurrentNode', currentNode, 'Keys', keys);
         const child = currentNode.children[keys[j]];
         let newString = word + child.letter;
-        if(child.isWord) {
-          suggestionArray.push({name: newString,
-                                frequency: child.frequency,
-                                lastTime: child.lastSelected});
+
+        if (child.isWord) {
+          suggestionArray.push({name: newString, frequency: child.frequency, lastTime: child.lastSelected});
         }
-        traverseTheTrie(newString, child);
+        findThatWord(newString, child);
       }
     }
 
     if (currentNode && currentNode.isWord) {
-      suggestionArray.push({name: word,
-                            frequency: currentNode.frequency,
-                            lastTime: currentNode.lastSelected})
+      suggestionArray.push({name: word, frequency: currentNode.frequency, lastTime: currentNode.lastSelected})
     }
 
-    if(currentNode) {
-      traverseTheTrie(word, currentNode)
+    if (currentNode) {
+      findThatWord(word, currentNode)
     }
     // console.log(suggestionArray);
     suggestionArray.sort((a, b) => {
       return b.frequency - a.frequency || b.lastTime - a.lastTime;
     })
-    let dan = suggestionArray.map((obj) => {
+    return suggestionArray.map((obj) => {
       return obj.name
     })
-    console.log(dan);
-    return dan
   }
 
   select(word) {
-    let wordsArray = [...word];
+    let wordsArray = [...word.toLowerCase()];
     let currentNode = this.root;
 
     for (let i = 0; i < wordsArray.length; i++) {
@@ -93,4 +86,4 @@ export default class Trie {
       this.insert(word);
     })
   }
-};
+}
