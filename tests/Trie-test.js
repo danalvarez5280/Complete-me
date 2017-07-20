@@ -160,13 +160,13 @@ describe('Trie functionality', () => {
     let completeMe;
 
     beforeEach(function () {
-      this.timeout(3000)
+      this.timeout(5000)
       completeMe = new Trie();
       completeMe.populate(dictionary);
 
     })
 
-    it.skip('should have lots of words after dictionary is populated', () => {
+    it('should have lots of words after dictionary is populated', () => {
       expect(completeMe.wordCount).to.equal(234371);
     })
   })
